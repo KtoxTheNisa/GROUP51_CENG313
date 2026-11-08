@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from src.utils import calculate_metrics
+from sklearn.linear_model import Ridge
 
 
 def predict_mean_baseline(train_df, target_df): #mean sales per product
