@@ -42,7 +42,7 @@ def normalize_price(df):
     return df
 
 
-def merge_tables(sales_df, inventory_df, calendar_df):
+def merge_tables(sales_df, inventory_df, calendar_df): #merge sales with inventory and calendar on id and date
     inv_cols = inventory_df[['unique_id', 'product_unique_id', 'L1_category_name_en', 'L2_category_name_en']]
     cal_cols = calendar_df[['date', 'warehouse', 'holiday', 'shops_closed', 'winter_school_holidays', 'school_holidays']]
     df = sales_df.merge(inv_cols, on='unique_id', how='left')
