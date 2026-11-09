@@ -9,7 +9,7 @@ Members: Nisanur Çelebi - 24118080069 (GitHub: KtoxTheNisa)
 
 The dataset is from Rohlik Group, an online grocery delivery service operating across 7 warehouses in 4 countries (Czechia, Germany, Hungary, and Austria). The goal is to predict daily sales (`sales_hat`) for each inventory item for the 14-day test period (2024-06-03 to 2024-06-16). It consists of five files:
 - `sales_train.csv`: Historical daily sales, total orders, availability, selling prices, and 7 discount types (`4,007,419` rows).
-- `sales_test.csv`: The 14-day forecasting period without `sales`, `total_orders`, and `availability` (`47,021` rows).
+- `sales_test.csv`: The 14-day forecasting period without sales and availability (47,021 rows).
 - `inventory.csv`: Product categories (`L1` to `L4`) and product IDs for each warehouse item (`5,432` rows).
 - `calendar.csv`: Daily holiday and school holiday flags for each warehouse (`23,016` rows).
 - `test_weights.csv`: Product weights used to calculate the competition metric, Weighted Mean Absolute Error (WMAE) (`5,390` rows).
