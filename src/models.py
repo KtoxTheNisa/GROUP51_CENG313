@@ -43,10 +43,19 @@ def predict_recent_mean_baseline(train_df, target_df): #mean sales per product i
     
     preds = target_df['unique_id'].map(recent_means).fillna(global_mean)
     return preds.values
+
+def predict_recent_median_baseline(train_df, target_df): #median sales per product in last 28 days
+    dates = pd.to_datetime(train_df['date'])
+    recent = train_df[dates > dates.max() - pd.Timedelta(days=28)]
+    recent_medians = recent.groupby('unique_id')['sales'].median()
+    global_median = train_df['sales'].median()
+    
+    preds = target_df['unique_id'].map(recent_medians).fillna(global_median)
+    return preds.values
     
 def predict_ridge_baseline(train_df, target_df):
     #ridge with price, discount and calendar features
-    features = ['price_norm', 'availability', 'max_discount', 'holiday', 'shops_closed', 'school_holidays']
+    features = ['price_norm', 'max_discount', 'holiday', 'shops_closed', 'school_holidays']
     model = Ridge()
     model.fit(train_df[features].fillna(0), train_df['sales'])
     preds = model.predict(target_df[features].fillna(0))

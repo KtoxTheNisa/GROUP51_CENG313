@@ -10,7 +10,7 @@ Members: Nisanur Çelebi - 24118080069 (GitHub: KtoxTheNisa)
 The dataset is from Rohlik Group, an online grocery delivery service. It covers 7 warehouses in 3 countries (Czechia, Hungary and Germany). The goal is to predict daily sales (sales_hat) for each inventory item for the 14-day test period (2024-06-03 to 2024-06-16). It consists of five files:
 - `sales_train.csv`: Historical daily sales, total orders, availability, selling prices, and 7 discount types (`4,007,419` rows).
 - `sales_test.csv`: The 14-day forecasting period without sales and availability (47,021 rows).
-- `inventory.csv`: Product categories (`L1` to `L4`) and product IDs for each warehouse item (`5,432` rows).
+- `inventory.csv`: Product categories (`L1` to `L4`) and product IDs (`unique_id` and `product_unique_id`) for each warehouse item (`5,432` rows).
 - `calendar.csv`: Daily holiday and school holiday flags for each warehouse (`23,016` rows).
 - `test_weights.csv`: Product weights used to calculate the competition metric, Weighted Mean Absolute Error (WMAE) (`5,390` rows).
 
@@ -31,7 +31,7 @@ Open `assignment1_eda_baseline.ipynb` in Google Colab. The first cells download 
 
 **Cleaning.** We removed 52 rows with missing sales and total orders, filled missing holiday names with 'Unknown Holiday' in the calendar and clipped the discount columns to [0, 1] since a few values were negative. Prices are in different currencies for each country, so we added a normalized price per warehouse (`price_norm`). Then we merged sales with the inventory and calendar tables. We used the full training data, 4,007,367 rows.
 
-**What we saw in the data.** Sales are right skewed, the mean is 108 but the median is only 39.5. Total daily sales increase over the years and drop sharply around Christmas. Fridays have the highest sales. Holidays have lower average sales than normal days. Discounts are interesting: discounted products sell more in general, but small discounts (1-15%) are actually below no-discount products, and the real jump comes after 30%. However, different discount groups contain different products, so when we compare each product with its own average sales, relative sales increase across all discount levels.
+**What we saw in the data.** Sales are right skewed, the mean is 108 but the median is only 39.5. Across categories from `inventory.csv`, `Fruit and vegetable` has the most rows and highest median sales (48.8), while `Bakery` has the highest mean sales (121.8). Total daily sales increase over the years and drop sharply around Christmas. Fridays have the highest sales. Holidays have lower average sales than normal days. Discounts are interesting: discounted products sell more in general, but small discounts (1-15%) are actually below no-discount products, and the real jump comes after 30%. However, different discount groups contain different products, so when we compare each product with its own average sales, relative sales increase across all discount levels. Checking the 7 discount columns one by one also showed that `type_0_discount` (2.61) and `type_2_discount` (2.20) boost sales the most.
 
 **Validation.** The test period is the 14 days after the training data ends (2024-06-03 to 2024-06-16), so we kept the last 14 days of the training data for validation. We used WMAE with the test weights as the main metric.
 
@@ -41,14 +41,16 @@ Open `assignment1_eda_baseline.ipynb` in Google Colab. The first cells download 
 |---|---|---|---|
 | Historical Mean | 33.25 | 41.32 | 140.86 |
 | Historical Median | 32.76 | 41.38 | 149.46 |
-| Ridge Regression | 75.15 | 113.35 | 397.68 |
+| Ridge Regression | 74.92 | 113.13 | 397.69 |
 | Recent Mean (28 days) | 31.27 | 34.87 | 111.13 |
+| **Recent Median (28 days)** | **26.77** | **31.50** | **113.58** |
 
-Recent mean worked best. Since sales grow over time, the last 28 days are closer to the test period than the full history. Ridge was the worst because it has no information about which product it is predicting, only price, discount and calendar features. None of these baselines change their prediction from day to day, so the weekly pattern is not used yet.
+Using the last 28 days worked much better than the full history because sales grow over time. Between the two 28-day baselines, the recent median achieved the best WMAE (26.77) because it is less affected by big discount peaks than the mean. Ridge was the worst because it has no information about which product it is predicting, only price, discount and calendar features. None of these baselines change their prediction from day to day, so the weekly pattern is not used yet.
 
 ## Kaggle Submission History
 
-- **2026-11-08:** Submitted `submission_baseline.csv` (`Recent Mean - 28 days` baseline) — Validation WMAE: `31.2676`, Public Score: `32.88808`, Private Score: `31.83556`. These are close to our validation score, so our validation setup seems to work.
+- **2026-11-08:** Submitted `submission_baseline.csv` (`Recent Mean - 28 days` baseline) — Validation WMAE: `31.2676`, Public Score: `32.88808`, Private Score: `31.83556`.
+- **2026-11-09:** Submitted `submission_recent_median.csv` (`Recent Median - 28 days` baseline) — Validation WMAE: `26.7680`, Public Score: `28.87416`, Private Score: `28.26044`. Both Kaggle scores improved by ~3.6–4.0 points and closely match our validation results, confirming that our validation setup works well.
 
 ## Progress Logs
 
@@ -62,7 +64,7 @@ Recent mean worked best. Since sales grow over time, the last 28 days are closer
 - **2026-11-08:** Added `predict_recent_mean_baseline` (28 days) and `predict_ridge_baseline` to `src/models.py`, and expanded EDA plots in the notebook.
 - **2026-11-08:** Updated `clean_calendar` (`'Unknown Holiday'` handling) and `normalize_price` (scaling test prices using train min/max) in `src/data.py`.
 - **2026-11-08:** Completed full notebook run on the entire dataset (`4,007,367` rows), submitted `submission_baseline.csv` to Kaggle, and wrote initial `README.md`.
-- **2026-11-09:** Updated `README.md` with dataset overview, Kaggle submission history, and progress logs.
+- **2026-11-09:** Updated `README.md` with dataset overview, Kaggle submission history, and progress logs; added `inventory` category and discount type checks, `predict_recent_median_baseline`, and removed `availability` from `predict_ridge_baseline`.
 
 ## Plan for Assignment 2
 
