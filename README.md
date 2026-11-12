@@ -17,15 +17,21 @@ The dataset is from Rohlik Group, an online grocery delivery service. It covers 
 ## Files
 
     src/
-      data.py       loading, cleaning, price normalization, merging
-      models.py     baseline models
-      utils.py      train/val split, metrics, submission
+      __init__.py
+      data.py         loading, cleaning, price normalization, merging
+      models.py       baseline models
+      utils.py        train/val split, metrics, submission
+    submissions/      Kaggle late-submission score screenshots
+    data/             dataset files (excluded via .gitignore)
     assignment1_eda_baseline.ipynb
     assignment2_solution.ipynb
+    requirements.txt
+    README.md
 
-## How to run
+## How to Download Data & Run
 
-Open `assignment1_eda_baseline.ipynb` in Google Colab. The first cells download the data with the Kaggle API, so you need to add your Kaggle token to Colab secrets as `KAGGLE_API_TOKEN`. After that the notebook can be run from top to bottom.
+- **Google Colab:** Open `assignment1_eda_baseline.ipynb` in Colab ([Open in Colab](https://colab.research.google.com/github/ceng313-2026/GROUP51_CENG313/blob/main/assignment1_eda_baseline.ipynb) | [View on nbviewer](https://nbviewer.org/github/ceng313-2026/GROUP51_CENG313/blob/main/assignment1_eda_baseline.ipynb)). Add your Kaggle API token to Colab secrets as `KAGGLE_API_TOKEN`; the setup cells automatically download and unzip the competition data into `data/`, and the notebook runs from top to bottom.
+- **Local:** Accept the competition rules on the [Kaggle competition page](https://www.kaggle.com/competitions/rohlik-sales-forecasting-challenge-v2/data), download the files (or run `kaggle competitions download -c rohlik-sales-forecasting-challenge-v2` and extract into `data/`), install dependencies with `pip install -r requirements.txt`, and run `assignment1_eda_baseline.ipynb`.
 
 ## Assignment 1: EDA and Baselines
 
@@ -51,6 +57,7 @@ Using the last 28 days worked much better than the full history because sales gr
 
 - **2026-11-08:** Submitted `submission_baseline.csv` (`Recent Mean - 28 days` baseline) — Validation WMAE: `31.2676`, Public Score: `32.88808`, Private Score: `31.83556`.
 - **2026-11-09:** Submitted `submission_recent_median.csv` (`Recent Median - 28 days` baseline) — Validation WMAE: `26.7680`, Public Score: `28.87416`, Private Score: `28.26044`. Both Kaggle scores improved by ~3.6–4.0 points and closely match our validation results, confirming that our validation setup works well.
+- Score screenshots are stored in `submissions/` (`kaggle_submission1.png`, `kaggle_submission2.png`).
 
 ## Progress Logs
 
